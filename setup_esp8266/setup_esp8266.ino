@@ -11,13 +11,13 @@ char name[50] =  "YinX-ESP8266"; // Enter WiFi password
 char webUsername[32] = "admin";
 char webPassword[50] = "126457";
 const char* currentWfSsid = "Yin-ESP8266";
-const char* currentWfpw = "123456";
+const char* currentWfpw = "123456789";
 char mqttServer[50] = "smartfarm.yangyinhouse.com";
 int mqttPort = 8883;
 char mqttUser[50] = "admin";
 char mqttPassword[50] = "yinX1506";
 char topicRemote[50] = "remote";
-char topicBeatHeart[50] = "esp-beat-heart";
+char topicBeatHeart[50] = "esp-smart-farm-beat-heart";
 int currentStateDoor = 0;
 IPAddress _cip = IPAddress(192, 168, 1, 156);
 IPAddress _cgw = IPAddress(192, 168, 1, 1);
@@ -232,7 +232,8 @@ PubSubClient client(espClient);
 int numberRetryConnectMax = 100;
 void setupWifi() {
   Serial.println("Begin connect with wifi at " + String(ssid) + ":" + String(password) );
-  WiFi.config(_ip, _dns, _gw, _sn);
+//  WiFi.config(_ip, _dns, _gw, _sn);
+  WiFi.mode(WIFI_AP_STA);
   WiFi.begin(ssid, password);
   int countRetryConnect = 0;
   while (WiFi.status() != WL_CONNECTED) {
@@ -243,9 +244,9 @@ void setupWifi() {
       WiFi.disconnect();
       // Start Access Point
       Serial.println("Start Access Point");
-      WiFi.mode(WIFI_AP_STA);
+      
       WiFi.softAPConfig(_cip, _cgw, _csn);
-      WiFi.softAP(currentWfSsid, currentWfpw);
+      WiFi.softAP(currentWfSsid, currentWfpw, 1, false);
       IPAddress myIP = WiFi.softAPIP();
       Serial.print("AP IP address: ");
       Serial.println(myIP);
@@ -312,10 +313,10 @@ String showInfoPage() {
   table += "<tr><th colspan=\"2\" class=\"title\" style=\"border-top: none;\">Wifi Config</th></tr>";
   table += "<tr><th>SSID</th><td>" + String(ssid) + "</td></tr>";
   table += "<tr><th>Password</th><td>" + String(password) + "</td></tr>";
-  table += "<tr><th>IPv4 Address</th><td>" + Ip2S(_ip) + "</td></tr>";
-  table += "<tr><th>Default Gateway</th><td>" + Ip2S(_gw) + "</td></tr>";
-  table += "<tr><th>Subnet Mask</th><td>" + Ip2S(_sn) + "</td></tr>";
-  table += "<tr><th>DNS</th><td>" + Ip2S(_dns) + "</td></tr>";
+//  table += "<tr><th>IPv4 Address</th><td>" + Ip2S(_ip) + "</td></tr>";
+//  table += "<tr><th>Default Gateway</th><td>" + Ip2S(_gw) + "</td></tr>";
+//  table += "<tr><th>Subnet Mask</th><td>" + Ip2S(_sn) + "</td></tr>";
+//  table += "<tr><th>DNS</th><td>" + Ip2S(_dns) + "</td></tr>";
   table += "<tr><th colspan=\"2\" class=\"title\">Device</th></tr>";
   table += "<tr><th>Name</th><td>" + String(name) + "</td></tr>";
   table += "<tr><th>Mac Address</th><td>" + WiFi.macAddress() + "</td></tr>";
@@ -374,10 +375,10 @@ String showEditInfoPage(String errors[], int size) {
   table += "<tr><th colspan=\"2\" class=\"title\" style=\"border-top: none;\">Wifi Config</th></tr>";
   table += "<tr><th>SSID</th><td><input type=\"text\" name=\"ssid\" value=\"" + normalizeToHtml(String(ssid)) + "\" required /></td></tr>";
   table += "<tr><th>Password</th><td><input type=\"text\" name=\"wfpw\" value=\"" + normalizeToHtml(String(password)) + "\" /></td></tr>";
-  table += "<tr><th>IPv4 Address</th><td><input type=\"text\" name=\"ip\" value=\"" + Ip2S(_ip) + "\" /></td></tr>";
-  table += "<tr><th>Default Gateway</th><td><input type=\"text\" name=\"gw\" value=\"" + Ip2S(_gw) + "\" /></td></tr>";
-  table += "<tr><th>Subnet Mask</th><td><input type=\"text\" name=\"sn\" value=\"" + Ip2S(_sn) + "\" /></td></tr>";
-  table += "<tr><th>DNS</th><td><input type=\"text\" name=\"dns\" value=\"" + Ip2S(_dns) + "\" /></td></tr>";
+//  table += "<tr><th>IPv4 Address</th><td><input type=\"text\" name=\"ip\" value=\"" + Ip2S(_ip) + "\" /></td></tr>";
+//  table += "<tr><th>Default Gateway</th><td><input type=\"text\" name=\"gw\" value=\"" + Ip2S(_gw) + "\" /></td></tr>";
+//  table += "<tr><th>Subnet Mask</th><td><input type=\"text\" name=\"sn\" value=\"" + Ip2S(_sn) + "\" /></td></tr>";
+//  table += "<tr><th>DNS</th><td><input type=\"text\" name=\"dns\" value=\"" + Ip2S(_dns) + "\" /></td></tr>";
   table += "<tr><th colspan=\"2\" class=\"title\">Device</th></tr>";
   table += "<tr><th>Name</th><td><input type=\"text\" name=\"name\" value=\"" + String(name) + "\" required /></td></tr>";
   table += "<tr><th>Mac Address</th><td>" + WiFi.macAddress() + "</td></tr>";
@@ -423,51 +424,52 @@ void handleSaveInfo() {
   }
   server.arg("wfpw").toCharArray(password, 50);
   IPAddress ip;
-  String text = server.arg("ip");
-  text.trim();
-  if (text != "" && ip.fromString(text)) {
-    if (ip != _ip) {
-      needResetWifi = true;
-    }
-    _ip = ip;
-  } else {
-    errors[size] = "IPv4 Address is wrong";
-    size++;
-  }
+  String text;
+//  text = server.arg("ip");
+//  text.trim();
+//  if (text != "" && ip.fromString(text)) {
+//    if (ip != _ip) {
+//      needResetWifi = true;
+//    }
+//    _ip = ip;
+//  } else {
+//    errors[size] = "IPv4 Address is wrong";
+//    size++;
+//  }
 
-  text = server.arg("gw");
-  text.trim();
-  if (text != "" && ip.fromString(text)) {
-    if (ip != _gw) {
-      needResetWifi = true;
-    }
-    _gw = ip;
-  } else {
-    errors[size] = "Default Gateway is wrong";
-    size++;
-  }
-  text = server.arg("sn");
-  text.trim();
-  if (text != "" && ip.fromString(text)) {
-    if (ip != _sn) {
-      needResetWifi = true;
-    }
-    _sn = ip;
-  } else {
-    errors[size] = "Subnet Mask is wrong";
-    size++;
-  }
-  text = server.arg("dns");
-  text.trim();
-  if (text != "" && ip.fromString(text)) {
-    if (ip != _dns) {
-      needResetWifi = true;
-    }
-    _dns = ip;
-  } else {
-    errors[size] = "DNS is wrong";
-    size++;
-  }
+//  text = server.arg("gw");
+//  text.trim();
+//  if (text != "" && ip.fromString(text)) {
+//    if (ip != _gw) {
+//      needResetWifi = true;
+//    }
+//    _gw = ip;
+//  } else {
+//    errors[size] = "Default Gateway is wrong";
+//    size++;
+//  }
+//  text = server.arg("sn");
+//  text.trim();
+//  if (text != "" && ip.fromString(text)) {
+//    if (ip != _sn) {
+//      needResetWifi = true;
+//    }
+//    _sn = ip;
+//  } else {
+//    errors[size] = "Subnet Mask is wrong";
+//    size++;
+//  }
+//  text = server.arg("dns");
+//  text.trim();
+//  if (text != "" && ip.fromString(text)) {
+//    if (ip != _dns) {
+//      needResetWifi = true;
+//    }
+//    _dns = ip;
+//  } else {
+//    errors[size] = "DNS is wrong";
+//    size++;
+//  }
 
   text = server.arg("name");
   text.trim();
@@ -641,7 +643,7 @@ void loop() {
       if (connected) {
         Serial.println("connected");
         // Once connected, publish an announcement...
-        String msg = String(name) + "~" + WiFi.macAddress() + "~" + String(topicRemote) + "~" + currentStateDoor;
+        String msg = String(name) + "~" + WiFi.macAddress()+ "~" + Ip2S(WiFi.localIP()) + "~" + String(topicRemote) + "~" + currentStateDoor;
         client.publish(topicBeatHeart, msg.c_str());
         // ... and resubscribe
         client.subscribe(topicRemote);
@@ -657,10 +659,10 @@ void loop() {
           if(numberReconnect > 20){
             WiFi.disconnect();
             // Start Access Point
-            Serial.println("Start Access Point");
-            WiFi.mode(WIFI_AP_STA);
+            WiFi.softAPdisconnect (false);
+            Serial.println("Start Access Point at loop");
             WiFi.softAPConfig(_cip, _cgw, _csn);
-            WiFi.softAP(currentWfSsid, currentWfpw);
+            WiFi.softAP(currentWfSsid, currentWfpw, 1, false);
             IPAddress myIP = WiFi.softAPIP();
             Serial.print("AP IP address: ");
             Serial.println(myIP);
@@ -673,7 +675,7 @@ void loop() {
   } else {
     if (now - lastMsg > 5000) {
       lastMsg = now;
-      String msg = String(name) + "~" + WiFi.macAddress() + "~" + String(topicRemote) + "~" + currentStateDoor;
+      String msg = String(name) + "~" + WiFi.macAddress()+ "~" + Ip2S(WiFi.localIP()) + "~" + String(topicRemote) + "~" + currentStateDoor;
       client.publish(topicBeatHeart, msg.c_str());
     }
   }
