@@ -1,0 +1,29 @@
+{
+  "name": "smart-farm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TungX/smart-farm.git"
+  },
+  "author": "Yin X",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TungX/smart-farm/issues"
+  },
+  "homepage": "https://github.com/TungX/smart-farm#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.11.15",
+    "mqtt": "^4.2.6",
+    "path": "^0.12.7"
+  }
+}
