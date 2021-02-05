@@ -18,6 +18,12 @@ function connect() {
     });
     mqttClient.on('connect', function () {
         console.log('Client connected to Mqtt broker');
+        mqttClient.subscribe('esp-smart-farm-beat-heart', function (err) {
+            if (err) {
+               
+            }
+          })
+        
     });
 }
 
