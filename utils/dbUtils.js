@@ -5,10 +5,10 @@ const options = {
 };
 
 function connectDB(canConnectWhenError = true) {
-  console.log('Connect with: ' + config.domains.CONFIG_MONGO_URI);
-  mongoose.connect(config.domains.CONFIG_MONGO_URI, options)
+  console.log('Connect with: ' + config.dbConfig.CONFIG_MONGO_URI);
+  mongoose.connect(config.dbConfig.CONFIG_MONGO_URI, options)
     .then(() => {
-      console.log(`Connected database successfully: ${config.domains.CONFIG_MONGO_URI}`);
+      console.log(`Connected database successfully: ${config.dbConfig.CONFIG_MONGO_URI}`);
       mongoose.connection.on('disconnected', function (e) {
         setTimeout(function () {
           console.log('reconnect with mongodb');

@@ -28,3 +28,4 @@ app.listen(port, () => {
 app.disable("x-powered-by");
 
 require('./modules/mqttService').connect();
+require('./services/checkDevice');

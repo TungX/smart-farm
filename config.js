@@ -5,10 +5,16 @@ const mqttConfig = {
     MQTT_PASSWORD: process.env.MQTT_PASSWORD || '123456789',
     MQTT_TOPIC_MONITOR: process.env.MQTT_TOPIC_MONITOR || "esp-smart-farm-beat-heart"
 };
-const mqttConfig = {
+const dbConfig = {
     CONFIG_MONGO_URI: process.env.MONGODB_URI || 'mongodb://localhost:27017/smart-farm',
+}
+const telegramConfig = {
+    TOKEN: process.env.TELEGRAM_TOKEN || '',
+    GROUP_SYSTEM: process.env.GROUP_SYSTEM || 'g427922300',
+    GROUP_CUSTOMER: process.env.GROUP_CUSTOMER || 'g520248511',
 }
 module.exports = {
     mqttConfig,
     dbConfig,
+    telegramConfig,
 }
