@@ -29,3 +29,6 @@ app.disable("x-powered-by");
 
 require('./modules/mqttService').connect();
 require('./services/checkDevice');
+
+app.use(`${apiVersion1}/users`, require('./routers/userRouter'));
+app.use(`${apiVersion1}/farms`, require('./routers/farmRouter'));

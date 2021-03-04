@@ -7,6 +7,8 @@ const mqttConfig = {
 };
 const dbConfig = {
     CONFIG_MONGO_URI: process.env.MONGODB_URI || 'mongodb://localhost:27017/smart-farm',
+    JWT_KEY: process.env.JWT_KEY || 'smartfarm',
+    JWT_TOKEN_LIFETIME: process.env.JWT_TOKEN_LIFETIME || '30d'
 }
 const telegramConfig = {
     TOKEN: process.env.TELEGRAM_TOKEN || '',
